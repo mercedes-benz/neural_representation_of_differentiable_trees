@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (c) 2024 MBition GmbH.
 # SPDX-License-Identifier: MIT
-black==22.8.0
+black==24.3.0
 build==1.0.3
 category_encoders==2.6.3
 import-linter==1.11.0
