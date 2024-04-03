@@ -1,0 +1,6 @@
+[submodule "DDT"]
+	path = DDT
+	url = https://github.com/CORE-Robotics-Lab/Interpretable_DDTS_AISTATS2020.git
+[submodule "SDTR"]
+	path = SDTR
+	url = https://github.com/TheSignPainter/SDTR.git

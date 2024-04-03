@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024 MBition GmbH.
+# SPDX-License-Identifier: MIT
+select = [
+    "ANN", # enforce type annotations
+    "ARG", # prohibit unused arguments
+    "C90", # limit structure/function complexity
+    "E",   # formatting - pycodestyle errors
+    "ERA", # eradicate commented-out code
+    "F",   # formatting - Pyflakes
+    "I",   # enforce sorted imports
+    "INP", # require __init__.py files everywhere
+    "RET", # enforce rules regarding return statements
+    "RSE", # check for unnecessary parentheses on raised exceptions
+    "SIM", # check for possible simplifications
+    "TID", # eradicate relative and banned imports
+    "W",   # formatting - pycodestyle warnings
+]
+
+ignore = [
+    "ANN101", # do not require type annotation for self keyword
+    "E501",   # 88 character line limit
+]
+
+extend-exclude = ["DDT", "SDTR"]
