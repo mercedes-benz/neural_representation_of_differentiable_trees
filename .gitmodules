@@ -4,3 +4,6 @@
 [submodule "SDTR"]
 	path = SDTR
 	url = https://github.com/TheSignPainter/SDTR.git
+[submodule "NODE"]
+	path = NODE
+	url = https://github.com/Qwicen/node.git
