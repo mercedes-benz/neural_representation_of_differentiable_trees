@@ -9,6 +9,7 @@ from src.export.documentation import Documentation
 from src.model_timer import ModelTimer
 from src.models.ddt import Ddt
 from src.models.nerdt import Nerdt
+from src.models.node import Node
 from src.models.sdtr import Sdtr
 from src.models.tel import Tel
 from src.processing import get_data_loader
@@ -43,6 +44,14 @@ def get_model(
             num_targets=num_targets,
             epochs=1,
             timestamp=timestamp,
+            depth=depth,
+        )
+    if name == "node":
+        return Node(
+            name="node",
+            num_targets=num_targets,
+            epochs=1,
+            num_inputs=num_inputs,
             depth=depth,
         )
     if name == "nerdt":
