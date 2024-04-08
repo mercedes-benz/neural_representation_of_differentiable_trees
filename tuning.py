@@ -12,6 +12,7 @@ from src.export.documentation import Documentation
 from src.models.ddt import Ddt
 from src.models.gbdt import Gbdt
 from src.models.nerdt import Nerdt
+from src.models.node import Node
 from src.models.sdtr import Sdtr
 from src.models.tel import Tel
 from src.models.tree import Tree
@@ -53,6 +54,10 @@ PARAM_DICT = {
         "depth": tune.grid_search(DEPTH_RANGE),
         "lmbda1": tune.grid_search([0.1, 0.01, 0.001]),
         "lmbda2": tune.grid_search([0.1, 0.01, 0.001]),
+    },
+    "node": {
+        "learning_rate": tune.grid_search(LR_RANGE),
+        "depth": tune.grid_search(DEPTH_RANGE),
     },
 }
 
@@ -96,6 +101,14 @@ def get_model_factory(
             num_targets=num_targets,
             epochs=EPOCHS,
             timestamp=timestamp,
+            **params,
+        )
+    if name == "node":
+        return lambda params: Node(
+            name=name,
+            num_targets=num_targets,
+            epochs=EPOCHS,
+            num_inputs=num_inputs,
             **params,
         )
     if name == "nerdt":
