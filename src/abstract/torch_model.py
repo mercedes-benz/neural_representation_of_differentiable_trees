@@ -108,18 +108,8 @@ class TorchModel(AbstractModel):
     def save(self, filename: str) -> None:
         torch.save(self.model.state_dict(), f"{filename}.pt")
 
-    @classmethod
-    def load(cls: Type["TorchModel"], name: str, path: str) -> "TorchModel":
-        output = cls(name, num_targets=0, epochs=0, num_inputs=0, learning_rate=0)
-        output.model.load_state_dict(torch.load(f"{path}.pt"), strict=False)
-        output.wrapper = LightningWrapper(output.model, 0)
-        return output
-
     def summary(self) -> None:
         pass
 
     def plot(self, output_path: str) -> None:
         pass
-
-    def compute_flops(self) -> int:
-        return 0

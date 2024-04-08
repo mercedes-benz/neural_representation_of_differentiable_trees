@@ -35,10 +35,3 @@ class SklearnModel(AbstractModel):
 
     def save(self, filename: str) -> None:
         pass
-
-    @classmethod
-    def load(cls: Type["SklearnModel"], path: str) -> "SklearnModel":
-        pass
-
-    def compute_flops(self) -> int:
-        return -1
