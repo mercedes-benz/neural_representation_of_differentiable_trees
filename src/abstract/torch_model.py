@@ -110,6 +110,3 @@ class TorchModel(AbstractModel):
 
     def summary(self) -> None:
         pass
-
-    def plot(self, output_path: str) -> None:
-        pass

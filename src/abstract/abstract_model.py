@@ -50,7 +50,3 @@ class AbstractModel(ABC):
     @abstractmethod
     def summary(self) -> None:
         pass
-
-    @abstractmethod
-    def plot(self, output_path: str) -> None:
-        pass

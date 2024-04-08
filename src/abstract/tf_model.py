@@ -81,12 +81,3 @@ class TfModel(AbstractModel):
 
     def summary(self) -> None:
         self.model.summary()
-
-    def plot(self, output_path: str) -> None:
-        tf.keras.utils.plot_model(
-            self.model,
-            to_file=output_path,
-            show_shapes=True,
-            show_layer_names=True,
-            show_layer_activations=True,
-        )
