@@ -31,13 +31,13 @@ class ModelTimer:
             ignore_index=True,
         ).head(self.num_samples)
 
-    def _export_time(self, model: AbstractModel, duration: float) -> None:
+    def _export_time(self, model: AbstractModel, run_no: int, duration: float) -> None:
         db = SQLiteDB(self.sqlite_path)
         db.insert_measurement(
             model.info,
             self.timestamp,
             self.num_samples,
-            self.repetitions,
+            run_no,
             duration,
         )
         db.close()
@@ -49,6 +49,6 @@ class ModelTimer:
             number=self.warmup,
         )
 
-        for _ in range(self.repetitions):
+        for run_number in range(self.repetitions):
             duration = timeit.timeit(lambda: model.predict(self.X), number=1)
-            self._export_time(model, duration)
+            self._export_time(model, run_number, duration)

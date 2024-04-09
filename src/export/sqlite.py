@@ -52,7 +52,7 @@ class SQLiteDB:
             timestamp TEXT NOT NULL,
             model_info TEXT NOT NULL,
             samples REAL NOT NULL,
-            repetitions REAL NOT NULL,
+            run_no REAL NOT NULL,
             duration REAL NOT NULL
         );"""
         self.cursor.execute(query3)
@@ -116,16 +116,16 @@ class SQLiteDB:
         model_info: Dict[str, Any],
         timestamp: str,
         num_samples: int,
-        repetitions: int,
+        run_no: int,
         duration: float,
     ) -> None:
         model_info = json.dumps(model_info).replace('"', "")
         query = f"""
-                INSERT INTO measurements (timestamp, model_info, samples, repetitions, duration) VALUES (
+                INSERT INTO measurements (timestamp, model_info, samples, run_no, duration) VALUES (
                     "{timestamp}",
                     "{model_info}",
                     "{num_samples}",
-                    "{repetitions}",
+                    "{run_no}",
                     "{duration}"
                 );"""
         self.cursor.execute(query)
