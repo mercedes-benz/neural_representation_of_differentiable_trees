@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (c) 2024 MBition GmbH.
 # SPDX-License-Identifier: MIT
-from abc import ABC, abstractclassmethod, abstractmethod
+from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass
 
 import pandas as pd
@@ -47,17 +47,6 @@ class AbstractModel(ABC):
     def save(self, filename: str) -> None:
         pass
 
-    @abstractclassmethod
-    def load(cls, path: str) -> "AbstractModel":
-        pass
-
     @abstractmethod
     def summary(self) -> None:
-        pass
-
-    @abstractmethod
-    def plot(self, output_path: str) -> None:
-        pass
-
-    def compute_flops(self) -> int:
         pass

@@ -79,33 +79,5 @@ class TfModel(AbstractModel):
     def save(self, filename: str) -> None:
         self.model.save(f"{filename}.keras", save_format="keras")
 
-    @classmethod
-    def load(cls: Type["TfModel"], name: str, path: str) -> "TfModel":
-        model = tf.keras.models.load_model(path)
-        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        output = cls(name, num_targets=0, epochs=0, timestamp=timestamp)
-        output.model = model
-        return output
-
     def summary(self) -> None:
         self.model.summary()
-
-    def plot(self, output_path: str) -> None:
-        tf.keras.utils.plot_model(
-            self.model,
-            to_file=output_path,
-            show_shapes=True,
-            show_layer_names=True,
-            show_layer_activations=True,
-        )
-
-    def compute_flops(self) -> int:
-        forward_pass = tf.function(
-            self.model.call,
-            input_signature=[tf.TensorSpec(shape=(1,) + self.model.input_shape[1:])],
-        )
-        graph_info = profile(
-            forward_pass.get_concrete_function().graph,
-            options=ProfileOptionBuilder.float_operation(),
-        )
-        return graph_info.total_float_ops

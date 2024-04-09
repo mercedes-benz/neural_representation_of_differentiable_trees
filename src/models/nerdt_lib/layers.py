@@ -9,23 +9,23 @@ class LeafLayer(tf.keras.layers.Layer):
     def __init__(
         self,
         num_nodes: int,
-        activation: Callable[[tf.Tensor], tf.Tensor] | None = None,
     ) -> None:
         super(LeafLayer, self).__init__()
-        self.dense = tf.keras.layers.Dense(num_nodes, activation=activation)
+        self.prediction = tf.Variable(tf.random.normal(shape=(num_nodes,)))
 
-    def call(self, x: tf.Tensor, prev: tf.Tensor) -> tf.Tensor:
-        return prev * self.dense(x)
+    def call(self, prev: tf.Tensor) -> tf.Tensor:
+        return prev * self.prediction
 
 
-class NodeLayer(LeafLayer):
+class NodeLayer(tf.keras.layers.Layer):
     def __init__(
         self,
         num_nodes: int,
         activation: Callable[[tf.Tensor], tf.Tensor],
     ) -> None:
+        super(NodeLayer, self).__init__()
         self.activation = activation
-        super().__init__(num_nodes, activation)
+        self.dense = tf.keras.layers.Dense(num_nodes, activation=activation)
 
     def call(self, x: tf.Tensor, prev: tf.Tensor) -> tf.Tensor:
         p = prev * self.dense(x)
@@ -74,7 +74,7 @@ class NerdtLayer(tf.keras.Model):
         for node_layer in self.node_layers:
             y = node_layer(x, y)
 
-        y = self.leaf_layer(x, y)
+        y = self.leaf_layer(y)
         return tf.reduce_sum(y, axis=-1)
 
     def get_config(self) -> Dict[str, Any]:
