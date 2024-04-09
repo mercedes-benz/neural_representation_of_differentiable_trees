@@ -50,6 +50,7 @@ Furthermore, the experiments expect the following data sets to be located at the
 + [Abalone](https://archive.ics.uci.edu/dataset/1/abalone) (Save under `./data/abalone.data`)
 + [MPG](https://archive.ics.uci.edu/dataset/9/auto+mpg) (Save under `./data/auto-mpg.data`)
 + [EE](https://archive.ics.uci.edu/dataset/242/energy+efficiency) (Save under `./data/ENB2012_data.xlsx`)
++ [News](https://archive.ics.uci.edu/dataset/332/online+news+popularity) (Save under `./data/OnlineNewsPopularity.csv`)
 
 There are a total of 7 experiments, which can be run as follows:
 
