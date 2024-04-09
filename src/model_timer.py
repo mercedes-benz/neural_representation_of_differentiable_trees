@@ -48,8 +48,7 @@ class ModelTimer:
             lambda: model.predict(self.X),
             number=self.warmup,
         )
-        duration = timeit.timeit(
-            lambda: model.predict(self.X),
-            number=self.repetitions,
-        )
-        self._export_time(model, duration / self.repetitions)
+
+        for _ in range(self.repetitions):
+            duration = timeit.timeit(lambda: model.predict(self.X), number=1)
+            self._export_time(model, duration)
