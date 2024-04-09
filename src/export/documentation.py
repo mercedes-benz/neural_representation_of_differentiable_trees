@@ -42,5 +42,4 @@ class Documentation:
     def export_models(self, models: List[AbstractModel]) -> None:
         for model in models:
             model.save(f"{self.output_folder}/models/{model.name}")
-            model.plot(f"{self.output_folder}/plots/{model.name}_arch.png")
             self._save_model_summary(model)

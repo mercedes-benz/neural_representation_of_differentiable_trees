@@ -117,9 +117,3 @@ class TorchModel(AbstractModel):
 
     def summary(self) -> None:
         pass
-
-    def plot(self, output_path: str) -> None:
-        pass
-
-    def compute_flops(self) -> int:
-        return 0
