@@ -3,10 +3,12 @@
 import math
 import timeit
 from dataclasses import dataclass
+from typing import List
 
 import pandas as pd
 
 from src.abstract.abstract_model import AbstractModel
+from src.config import Config
 from src.export.sqlite import SQLiteDB
 
 
@@ -15,8 +17,8 @@ class ModelTimer:
     X: pd.DataFrame
     y: pd.DataFrame
     num_samples: int
-    sqlite_path: str
     timestamp: str
+    config: Config
     repetitions: int = 30
     warmup: int = 10
 
@@ -31,14 +33,15 @@ class ModelTimer:
             ignore_index=True,
         ).head(self.num_samples)
 
-    def _export_time(self, model: AbstractModel, duration: float) -> None:
-        db = SQLiteDB(self.sqlite_path)
-        db.insert_measurement(
+    def _export_time(self, model: AbstractModel, durations: List[float]) -> None:
+        db = SQLiteDB(self.config.sqlite_path)
+        db.insert_timings(
             model.info,
             self.timestamp,
             self.num_samples,
             self.repetitions,
-            duration,
+            durations,
+            self.config,
         )
         db.close()
 
@@ -48,8 +51,8 @@ class ModelTimer:
             lambda: model.predict(self.X),
             number=self.warmup,
         )
-        duration = timeit.timeit(
-            lambda: model.predict(self.X),
-            number=self.repetitions,
-        )
-        self._export_time(model, duration / self.repetitions)
+        durations = [
+            timeit.timeit(lambda: model.predict(self.X), number=1)
+            for _ in range(self.repetitions)
+        ]
+        self._export_time(model, durations)

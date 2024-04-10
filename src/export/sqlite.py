@@ -5,7 +5,8 @@ import sqlite3
 from dataclasses import asdict, dataclass
 from os import path
 from pathlib import Path
-from typing import Any, Dict
+import statistics
+from typing import Any, Dict, List
 
 from src.config import Config
 from src.utils.data_types import FoldEval, ModelEval
@@ -26,10 +27,10 @@ class SQLiteDB:
             model_info TEXT NOT NULL,
             processing_info TEXT NOT NULL,
             data_set TEXT NOT NULL,
-            r2 REAL NOT NULL,
-            mae REAL NOT NULL,
-            mape REAL NOT NULL,
-            mse REAL NOT NULL
+            r2_avg REAL NOT NULL,
+            mae_avg REAL NOT NULL,
+            mape_avg REAL NOT NULL,
+            mse_avg REAL NOT NULL
         );"""
         self.cursor.execute(query1)
         query2 = """
@@ -48,14 +49,25 @@ class SQLiteDB:
         );"""
         self.cursor.execute(query2)
         query3 = """
-        CREATE TABLE IF NOT EXISTS measurements (
+        CREATE TABLE IF NOT EXISTS timing_evals (
             timestamp TEXT NOT NULL,
+            comment TEXT NOT NULL,
             model_info TEXT NOT NULL,
+            processing_info TEXT NOT NULL,
+            data_set TEXT NOT NULL,
             samples REAL NOT NULL,
             repetitions REAL NOT NULL,
-            duration REAL NOT NULL
+            duration_avg REAL NOT NULL,
+            duration_std REAL NOT NULL
         );"""
         self.cursor.execute(query3)
+        query4 = """
+        CREATE TABLE IF NOT EXISTS timing_runs (
+            timestamp TEXT NOT NULL,
+            run_no REAL NOT NULL,
+            duration REAL NOT NULL
+        );"""
+        self.cursor.execute(query4)
         self.connection.commit()
 
     def __post_init__(self) -> None:
@@ -93,12 +105,12 @@ class SQLiteDB:
         processing_info = self._get_processing_info(config)
 
         query = f"""
-        INSERT INTO model_evals (timestamp, comment, model_info, processing_info, data_set, r2, mae, mape, mse) VALUES (
+        INSERT INTO model_evals (timestamp, comment, model_info, processing_info, data_set, r2_avg, mae_avg, mape_avg, mse_avg) VALUES (
             "{model_eval.timestamp}",
             "{config.evaluation_comment}",
             "{model_info}",
             "{processing_info}",
-            "{model_eval.data_set}",
+            "{config.data_set}",
             {averaged_validation_scores.r2},
             {averaged_validation_scores.mae},
             {averaged_validation_scores.mape},
@@ -111,24 +123,46 @@ class SQLiteDB:
 
         self.connection.commit()
 
-    def insert_measurement(
+    def insert_run(self, timestamp: str, run_no: int, duration: float) -> None:
+        query = f"""
+        INSERT INTO timing_runs (timestamp, run_no, duration) VALUES (
+            "{timestamp}",
+            {run_no},
+            {duration}
+        );"""
+        self.cursor.execute(query)
+
+    def insert_timings(
         self,
         model_info: Dict[str, Any],
         timestamp: str,
         num_samples: int,
         repetitions: int,
-        duration: float,
+        durations: List[float],
+        config: Config,
     ) -> None:
         model_info = json.dumps(model_info).replace('"', "")
+        processing_info = self._get_processing_info(config)
+        duration_avg = statistics.mean(durations)
+        duration_std = statistics.stdev(durations)
+
         query = f"""
-                INSERT INTO measurements (timestamp, model_info, samples, repetitions, duration) VALUES (
+                INSERT INTO timing_evals (timestamp, comment, model_info, processing_info, data_set, samples, repetitions, duration_avg, duration_std) VALUES (
                     "{timestamp}",
+                    "{config.evaluation_comment}",
                     "{model_info}",
+                    "{processing_info}",
+                    "{config.data_set}",
                     "{num_samples}",
                     "{repetitions}",
-                    "{duration}"
+                    "{duration_avg}",
+                    "{duration_std}"
                 );"""
         self.cursor.execute(query)
+
+        for i, duration in enumerate(durations):
+            self.insert_run(timestamp, i, duration)
+
         self.connection.commit()
 
     def close(self) -> None:

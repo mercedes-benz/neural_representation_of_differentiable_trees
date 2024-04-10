@@ -39,6 +39,3 @@ class SklearnModel(AbstractModel):
     @classmethod
     def load(cls: Type["SklearnModel"], path: str) -> "SklearnModel":
         pass
-
-    def compute_flops(self) -> int:
-        return -1
