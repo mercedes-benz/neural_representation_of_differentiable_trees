@@ -17,7 +17,6 @@ class ModelTimer:
     X: pd.DataFrame
     y: pd.DataFrame
     num_samples: int
-    sqlite_path: str
     timestamp: str
     config: Config
     repetitions: int = 30
@@ -35,7 +34,7 @@ class ModelTimer:
         ).head(self.num_samples)
 
     def _export_time(self, model: AbstractModel, durations: List[float]) -> None:
-        db = SQLiteDB(self.sqlite_path)
+        db = SQLiteDB(self.config.sqlite_path)
         db.insert_timings(
             model.info,
             self.timestamp,

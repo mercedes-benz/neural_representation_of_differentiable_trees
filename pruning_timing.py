@@ -85,7 +85,6 @@ def main() -> None:
         X=fold.X_validation,
         y=fold.y_validation,
         num_samples=1_000_000,
-        sqlite_path=config.sqlite_path,
         timestamp=timestamp,
         config=config,
     )

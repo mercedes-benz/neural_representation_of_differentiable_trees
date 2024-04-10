@@ -77,7 +77,6 @@ def main() -> None:
         X=X.drop(columns=["ID"]).astype("float32"),
         y=y.drop(columns=["ID"]).astype("float32"),
         num_samples=1_000_000,
-        sqlite_path=config.sqlite_path,
         timestamp=timestamp,
         config=config,
     )
