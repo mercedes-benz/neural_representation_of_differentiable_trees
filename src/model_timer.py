@@ -8,6 +8,7 @@ from typing import List
 import pandas as pd
 
 from src.abstract.abstract_model import AbstractModel
+from src.config import Config
 from src.export.sqlite import SQLiteDB
 
 
@@ -18,6 +19,7 @@ class ModelTimer:
     num_samples: int
     sqlite_path: str
     timestamp: str
+    config: Config
     repetitions: int = 30
     warmup: int = 10
 
@@ -34,12 +36,13 @@ class ModelTimer:
 
     def _export_time(self, model: AbstractModel, durations: List[float]) -> None:
         db = SQLiteDB(self.sqlite_path)
-        db.insert_measurements(
+        db.insert_timings(
             model.info,
             self.timestamp,
             self.num_samples,
             self.repetitions,
             durations,
+            self.config,
         )
         db.close()
 

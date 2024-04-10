@@ -5,6 +5,7 @@ import sqlite3
 from dataclasses import asdict, dataclass
 from os import path
 from pathlib import Path
+import statistics
 from typing import Any, Dict, List
 
 from src.config import Config
@@ -122,7 +123,16 @@ class SQLiteDB:
 
         self.connection.commit()
 
-    def insert_measurements(
+    def insert_run(self, timestamp: str, run_no: int, duration: float) -> None:
+        query = f"""
+        INSERT INTO timing_runs (timestamp, run_no, duration) VALUES (
+            "{timestamp}",
+            {run_no},
+            {duration}
+        );"""
+        self.cursor.execute(query)
+
+    def insert_timings(
         self,
         model_info: Dict[str, Any],
         timestamp: str,
@@ -133,21 +143,26 @@ class SQLiteDB:
     ) -> None:
         model_info = json.dumps(model_info).replace('"', "")
         processing_info = self._get_processing_info(config)
+        duration_avg = statistics.mean(durations)
+        duration_std = statistics.stdev(durations)
 
         query = f"""
-                INSERT INTO measurements (timestamp, comment, model_info, processing_info, data_set, samples, repetitions, duration_avg, duration_std) VALUES (
+                INSERT INTO timing_evals (timestamp, comment, model_info, processing_info, data_set, samples, repetitions, duration_avg, duration_std) VALUES (
                     "{timestamp}",
                     "{config.evaluation_comment}",
                     "{model_info}",
                     "{processing_info}",
                     "{config.data_set}",
-                    "{model_info}",
                     "{num_samples}",
                     "{repetitions}",
                     "{duration_avg}",
                     "{duration_std}"
                 );"""
         self.cursor.execute(query)
+
+        for i, duration in enumerate(durations):
+            self.insert_run(timestamp, i, duration)
+
         self.connection.commit()
 
     def close(self) -> None:
