@@ -9,11 +9,14 @@ from src.abstract.tf_model import TfModel
 
 
 @dataclass
-class Node(TfModel):
+class Grande(TfModel):
     depth: int = 3
 
     def get_model(self) -> torch.nn.Module:
         return GRANDE(
-            depth=self.depth,
-            n_estimators=1,
+            params={
+                "depth": self.depth,
+                "n_estimators": 1,
+            },
+            args={},
         )
