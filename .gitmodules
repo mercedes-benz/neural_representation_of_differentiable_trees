@@ -7,3 +7,6 @@
 [submodule "NODE"]
 	path = NODE
 	url = https://github.com/Qwicen/node.git
+[submodule "GRANDE"]
+	path = GRANDE
+	url = https://github.com/s-marton/GRANDE
