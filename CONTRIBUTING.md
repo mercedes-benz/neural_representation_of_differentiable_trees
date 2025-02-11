@@ -4,6 +4,12 @@
 
 This is an archived project, thus it is not actively maintained. Contributing is not endorsed.
 
+The following line is provided only to be consistent with policy requirements for all projects:
+
+Before you can contribute, you will need to sign our cla [Contributor License Agreement](https://github.com/mercedes-benz/foss/blob/master/cla/2024-11-04_MB_FOSS_CLA_MBition.pdf) and send the signed CLA to <cla-mbition@mercedes-benz.com>'
+
+^^^ Note again - contributing is not endorsed (see first line)
+
 # Communication
 
 In case there is any issue, however, please respect our FOSS Code of Conduct, as stated in this repository.
